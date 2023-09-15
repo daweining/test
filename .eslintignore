@@ -1,0 +1,5 @@
+tests/
+config/
+scripts/
+src/libs/*
+# .eslintrc.js

@@ -1,4 +1,4 @@
-'use strict';
+
 
 const fs = require('fs');
 const path = require('path');
@@ -71,6 +71,7 @@ const cssRegex = /\.css$/;
 const cssModuleRegex = /\.module\.css$/;
 const sassRegex = /\.(scss|sass)$/;
 const sassModuleRegex = /\.module\.(scss|sass)$/;
+const lessRegex = /\.less$/
 
 const hasJsxRuntime = (() => {
   if (process.env.DISABLE_NEW_JSX_TRANSFORM === 'true') {
@@ -319,6 +320,11 @@ module.exports = function (webpackEnv) {
           'scheduler/tracing': 'scheduler/tracing-profiling',
         }),
         ...(modules.webpackAliases || {}),
+        '@/src': path.resolve(process.cwd(), './src'),
+        '@/pages': path.resolve(process.cwd(), './src/pages'),
+        '@/components': path.resolve(process.cwd(), './src/components'),
+        '@/hoc': path.resolve(process.cwd(), './src/hoc'),
+        '@/store': path.resolve(process.cwd(), './src/store'),
       },
       plugins: [
         // Prevents users from importing files from outside of src/ (or node_modules/).
@@ -543,6 +549,20 @@ module.exports = function (webpackEnv) {
                 'sass-loader'
               ),
             },
+            {
+              test: lessRegex,
+              use: [{
+                loader: 'style-loader' // creates style nodes from JS strings
+              }, {
+                loader: 'css-loader' // translates CSS into CommonJS
+              }, {
+                loader: 'less-loader', // compiles Less to CSS
+                options: {
+                  javascriptEnabled: true,
+                  // modifyVars: theme
+                }
+              }]
+            },
             // "file" loader makes sure those assets get served by WebpackDevServer.
             // When you `import` an asset, you get its (virtual) filename.
             // In production, they would get copied to the `build` folder.
@@ -615,7 +635,7 @@ module.exports = function (webpackEnv) {
       isEnvDevelopment &&
         shouldUseReactRefresh &&
         new ReactRefreshWebpackPlugin({
-          overlay: false,
+          overlay: true,
         }),
       // Watcher doesn't work well if you mistype casing in a path so we use
       // a plugin that prints an error when you attempt to do this.
