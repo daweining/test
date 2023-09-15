@@ -30,7 +30,6 @@ const PageOne = () => {
   }, [dispatch]);
 
   console.log('reset');
-  console.log('reset2');
 
   useEffect(() => {
     /* console.log('test'[0]);
