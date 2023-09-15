@@ -29,6 +29,8 @@ const PageOne = () => {
     dispatch(firstTest());
   }, [dispatch]);
 
+  console.log('reset');
+
   useEffect(() => {
     /* console.log('test'[0]);
     const map = new Map();
